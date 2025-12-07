@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tourism Demand Prediction</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<div class="container mt-5">
+    <div class="card p-4 shadow">
+        <h2 class="text-center mb-4">Tourism Demand Prediction</h2>
+
+        <div class="row g-3">
+            <div class="col-md-4">
+                <label>Arrival Month</label>
+                <input id="month" type="number" class="form-control" min="1" max="12">
+            </div>
+
+            <div class="col-md-4">
+                <label>Weekend Nights</label>
+                <input id="weekend" type="number" class="form-control">
+            </div>
+
+            <div class="col-md-4">
+                <label>Week Nights</label>
+                <input id="week" type="number" class="form-control">
+            </div>
+
+            <div class="col-md-4">
+                <label>Travel Type</label>
+                <select id="travel_type" class="form-control">
+                    <option value="0">Solo</option>
+                    <option value="1">Couple</option>
+                    <option value="2">Family</option>
+                </select>
+            </div>
+
+            <div class="col-md-4">
+                <label>Children</label>
+                <input id="children" type="number" class="form-control">
+            </div>
+
+            <div class="col-md-4">
+                <label>Budget Category</label>
+                <select id="budget" class="form-control">
+                    <option value="0">Low</option>
+                    <option value="1">Medium</option>
+                    <option value="2">High</option>
+                </select>
+            </div>
+
+            <div class="col-md-4">
+                <label>Destination Type</label>
+                <select id="destination" class="form-control">
+                    <option value="0">Beach</option>
+                    <option value="1">City</option>
+                    <option value="2">Hill</option>
+                    <option value="3">Wildlife</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="text-center mt-4">
+            <button onclick="predict()" class="btn btn-primary">Predict Demand</button>
+        </div>
+
+        <h3 id="result" class="text-center text-success mt-4"></h3>
+    </div>
+</div>
+
+<script>
+function predict() {
+    fetch("/predict", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            arrival_date_month: parseInt(document.getElementById("month").value),
+            stays_in_weekend_nights: parseInt(document.getElementById("weekend").value),
+            stays_in_week_nights: parseInt(document.getElementById("week").value),
+            travel_type: parseInt(document.getElementById("travel_type").value),
+            children: parseInt(document.getElementById("children").value),
+            budget_category: parseInt(document.getElementById("budget").value),
+            destination_type: parseInt(document.getElementById("destination").value)
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById("result").innerText =
+            "Predicted Tourism Demand: " + data.prediction;
+    });
+}
+</script>
+
+</body>
+</html>
